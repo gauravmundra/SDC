@@ -83,9 +83,6 @@ Implemented in `train_classifier.py`.
 1. Any category or subcategory have less than minimum data rows.
 2. Column names are wrong in upload training data or spelling mistake in category or subcategory column in training data.
 3. Model was not fully trained and whole project files require fallback.
-4. ##### (For Developer) Implement of asynchronous function for training is must in future.
-5. (For Developer) Number of iterations of KERAS.Sequential().fit() must be changed according to training data size.
-6. (For Developer) Reduce classification time. 
 
 
 
