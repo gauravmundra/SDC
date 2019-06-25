@@ -1,0 +1,66 @@
+{% extends "ics_master.html" %}
+{% block title %}IDeaS Client Response - ICS: Results{% endblock %}
+
+{% block message %}
+<h4 class="text-center">DESCRIPTION</h4>
+<p class="text-center"><i>{{query}}</i></p>
+{% endblock %}
+
+{% block content %}
+<h1 class="text-center">Root Cause</h1>
+<ul class="list-group">
+    <div class="row">
+        <div class="col">
+            <li class="list-group-item list-group-item-success text-center">{{classification_result}}
+            </li>
+        </div>
+        {% if(subclassification_result not in [-1, 'nan', 'NaN', 0, '', 'temp_subcat']) %}
+        <h3>></h3>
+        <div class="col">
+            <li class="list-group-item list-group-item-success text-center">{{subclassification_result}}
+            </li>
+        </div>
+        {% endif %}
+    </div>
+</ul>
+
+{% endblock %}
+
+
+{% block content1 %}
+<h1 class="text-center">Related Cases</h1>
+<div class="list-group">
+
+    {% for case_no, link in related_queries.items() %}
+
+
+    <a role="button" class="btn list-group-item list-group-item-primary text-center" href="{{link}}"
+       target="_blank">Case No. {{case_no}}</a>
+
+
+    {% endfor %}
+</div>
+{% endblock %}
+
+
+{% block content2 %}
+<h1 class="text-center">Category Processes</h1>
+<div class="list-group">
+
+    {% for process in processes %}
+    <!--div id="{{id}}"></div-->
+
+
+    <a role="button" class="btn list-group-item list-group-item-secondary text-center" href="{{process}}"
+       target="_blank">Process</a>
+
+
+    {% endfor %}
+</div>
+
+</div>
+<hr/>
+{% endblock %}
+
+{% block content3 %}
+{% endblock %}

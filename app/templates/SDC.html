@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>IDeaS Client Response</title>
+
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+
+<div class="container10">
+    <p style="font-size: 4rem;">IDeaS Client Response</p>
+</div>
+<div class="container80">
+    <div class="split left" style="background: url('/static/images/programmer0.jpg') center center no-repeat;">
+        <h1>ICS</h1>
+        <a href="{{url_for('ics_master')}}" class="button">Go</a>
+    </div>
+    <div class="split right" style="background: url('/static/images/designer0.jpg') center center no-repeat;">
+        <h1>ROA</h1>
+        <a href="{{url_for('roa_master')}}" class="button">Go</a>
+    </div>
+</div>
+
+<script type="text/javascript">
+    const left = document.querySelector(".left");
+    const right = document.querySelector(".right");
+    const container = document.querySelector(".container80");
+
+    left.addEventListener("mouseenter", () => {
+        container.classList.add("hover-left");
+    });
+
+    left.addEventListener("mouseleave", () => {
+        container.classList.remove("hover-left");
+    });
+
+    right.addEventListener("mouseenter", () => {
+        container.classList.add("hover-right");
+    });
+
+    right.addEventListener("mouseleave", () => {
+        container.classList.remove("hover-right");
+    });
+
+
+</script>
+
+</body>
+</html>

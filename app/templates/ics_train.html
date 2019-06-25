@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <title>IDeaS Client Response - Train</title>
+
+
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            crossorigin="anonymous"></script>
+    <script src="https://d14fo0winaifog.cloudfront.net/plotly-basic.js"></script>
+</head>
+
+<body>
+
+<div id="loading"
+     style="left: 0px; top: 0px; width: 100%; height: 100%; position: fixed; display: none; background: url('/static/images/loadingimage.gif') 50% 50% no-repeat; cursor: wait;"></div>
+
+<div id="main_content">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/ics">IDeaS Client Response(ICS)</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item active">
+                    <a class="nav-link" href="/ics/train">Train <span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Main</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ideas.com/">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="text-center">IDeaS Client Response</h1>
+            <p class="text-center">Add New Training Data</p>
+            <div style="min-height:30px"></div>
+
+            <div class="row">
+                <div class="col-lg-12 form-group-lg">
+                    <form enctype=multipart/form-data id="upload_" action="/ics/train" name="upload" method="post">
+
+                        <div class="input-group mb-3">
+                            <div class="custom-file">
+                                <input type="file" class="custom-file-input" name="train_data_file"
+                                       id="train_data_file">
+                                <label class="custom-file-label" for="train_data_file">Choose file</label>
+                            </div>
+                            <div class="input-group-append">
+                                <button type="submit" class="btn btn-light input-group-text" id="train"
+                                        onclick="loading();">&nbsp Train &nbsp
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            <div class="container">
+                <p class="text-danger text-center">Upload file should contain these columns: "Description", "Root
+                    Cause",
+                    "Sub
+                    Category",
+                    "Subject", "Case Number", "Case Activity"</p>
+            </div>
+            <hr/>
+            <div class="row">
+                <div class="col-md-12">
+                    {% block message %}
+                    {% endblock %}
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+
+
+    <div class="container">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <caption class="text-center">List of uploads</caption>
+                <thead class="thead-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">File Name</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Data Rows</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for index, row in training_database.iloc[::-1].iterrows() %}
+                <tr>
+                    <th scope="row">{{ index + 1 }}</th>
+                    <td>{{ row['file_name'] }}</td>
+                    <td>{{ row['date'].to_pydatetime().strftime('%b %d, %Y %I:%M%p') }}</td>
+                    <td>{{ row['data_rows'] }}</td>
+                </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <ul>
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#myModal').modal('show')
+
+    </script>
+    {% endif %}
+    {% endwith %}
+
+    <div style="min-height: 100px;"></div>
+    <footer class="page-footer mt-auto py-3">
+        <div class="footer-copyright container text-center"><span class="text-muted">© 2019 IDeaS | <a href='/ics_help'>README</a></span>
+        </div>
+    </footer>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#upload_").submit(function () {
+            $("#loading").show("slow");
+            $("#main_content").css("opacity", "0.3");
+            $("#loading").css("display", "block");
+            $("#train").attr("disabled", true);
+        });
+
+        $('#train_data_file').on('change', function () {
+            //get the file name
+            var fileName = $(this).val();
+            fileName = fileName.replace("C:\\fakepath\\", "");
+            //replace the "Choose a file" label
+            $(this).next('.custom-file-label').html(fileName);
+        });
+    });
+</script>
+</body>
+</html>

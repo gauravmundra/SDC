@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+
+    <title>{% block title %}IDeaS Client Response - ICS{% endblock %}</title>
+
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" rel="stylesheet">
+    <script crossorigin="anonymous"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+</head>
+
+<body>
+
+<div id="loading"
+     style="left: 0px; top: 0px; width: 100%; height: 100%; position: fixed; display: none; background: url('/static/images/loadingimage.gif') 50% 50% no-repeat; cursor: wait;"></div>
+
+<div id="main_content">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <a class="navbar-brand" href="/ics">IDeaS Client Response(ICS)</a>
+
+        <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+                data-target="#navbarNav" data-toggle="collapse" type="button">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav mr-auto">
+                <li class="nav-item">
+                    <a class="nav-link" href="/ics/train">Train</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/">Main</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="https://ideas.com/">Contact</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+
+    <div class="jumbotron">
+        <div class="container">
+            <h1 class="text-center">IDeaS Client Response</h1>
+            <p class="text-center">Categorizing client queries and automating response</p>
+            <div style="min-height:20x"></div>
+
+
+            <form action="/ics/go" id="classify" method="get">
+                <div class="row">
+                    <div class="form-group col-md-10">
+                        <input class="form-control" name="query" placeholder="Enter a query to classify"
+                               required type="text">
+                    </div>
+                    <div class="form-group col-md-2">
+                        <select class="form-control form-control-lg custom-select"
+                                id="inlineFormCustomSelectPref" name="query_subject">
+                            <option disabled selected value="">Subject..</option>
+                            <option style="color: red" value="none">NONE</option>
+                            {% for subject in subject_list %}
+                            <option value="{{subject}}">{{subject}}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+                <div style="min-height:15px"></div>
+                <div class="col-lg-offset-5" style="text-align:center">
+                    <button class="btn btn-lg btn-success" id="btnSubmit" type="submit">Submit</button>
+                </div>
+            </form>
+
+            <hr/>
+            {% block message %}
+            {% endblock %}
+        </div>
+    </div>
+
+
+    <div class="container">
+        {% block content %}
+        <div class="page-header">
+            <h1 class="text-center">Overview of Training Dataset</h1>
+        </div>
+        {% endblock %}
+    </div>
+
+    <hr/>
+
+    <div class="container">
+        {% block content1 %}
+        <div>
+            {% for id in ids %}
+            <div id="{{id}}"></div>
+            {% endfor %}
+        </div>
+        {% endblock %}
+    </div>
+
+    <hr/>
+    <div class="container">
+        {% block content2 %}
+    </div>
+    {% endblock %}
+
+
+    {% with messages = get_flashed_messages() %}
+    {% if messages %}
+    <div aria-hidden="true" aria-labelledby="exampleModalCenterTitle" class="modal fade" id="myModal" role="dialog"
+         tabindex="-1">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-body">
+                    <ul>
+                        {% for message in messages %}
+                        <li>{{ message }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script>
+        $('#myModal').modal('show')
+
+    </script>
+    {% endif %}
+    {% endwith %}
+
+
+    <footer class="page-footer mt-auto py-3">
+        <div class="footer-copyright container text-center"><span class="text-muted">© 2019 IDeaS | <a href='/ics_help'>README</a></span>
+        </div>
+    </footer>
+
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+
+        $("#classify").submit(function () {
+            $("#loading").show("slow");
+            $("#main_content").css("opacity", "0.3");
+            $("#loading").css("display", "block");
+            $("#btnSubmit").attr("disabled", true);
+        });
+
+    });
+
+</script>
+
+
+{% block content3 %}
+<script type="text/javascript">
+    const graphs = {{ graphJSON | safe }};
+    const ids = {{ ids | safe }};
+    for (let i in graphs) {
+        Plotly.plot(ids[i], graphs[i].data, graphs[i].layout, {staticPlot: false, scrollZoom: true, displayModeBar: false});
+    }
+</script>
+{% endblock %}
+
+
+</body>
+</html>

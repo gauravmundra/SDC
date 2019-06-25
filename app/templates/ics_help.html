@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1, shrink-to-fit=no" name="viewport">
+    <meta content="ie=edge" http-equiv="X-UA-Compatible">
+
+    <title>ICS Help</title>
+
+    <link crossorigin="anonymous" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" rel="stylesheet">
+    <link crossorigin="anonymous" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" rel="stylesheet">
+    <script crossorigin="anonymous"
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+            src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+            src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script crossorigin="anonymous"
+            integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+            src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+
+
+</head>
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+    <a class="navbar-brand" href="/ics">IDeaS Client Response(ICS)</a>
+
+    <button aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"
+            data-target="#navbarNav" data-toggle="collapse" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/ics/train">Train</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/">Main</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="https://ideas.com/">Contact</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+
+<div class="jumbotron">
+    <div class="container">
+        <div style="min-height: 30px;"></div>
+        <div class="text-center" style="padding-top: 30px;"><h2>README.md</h2></div>
+    </div>
+</div>
+
+
+<div class="container">
+    <div id="content"></div>
+</div>
+
+
+<footer class="page-footer mt-auto py-3">
+    <div class="footer-copyright container text-center"><span class="text-muted">© 2019 IDeaS | <a href='/ics_help'>README</a></span>
+    </div>
+</footer>
+
+
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    document.getElementById('content').innerHTML =
+        marked(" # Service Delivery Companion Text Classification App\n" +
+            "This project is a text classification system for categorizing IDeaS client queries. \n" +
+            "For a query with client provided subject(not compulsary), the system tries to identify the Root Cause, Sub Category and Related Cases from database.\n" +
+            "The classification model is a RNN model trained on tfidf and sub-models are XGBoost Classifier models trained on count vectorizer.\n" +
+            "\n" +
+            "## Usage\n" +
+            "\n" +
+            "###  1. Clone the Project and Install Requirements\n" +
+            "```\n" +
+            "cd root:\n" +
+            "pip install -r requirements.txt\n" +
+            "```\n" +
+            "\n" +
+            "### 2. ETL process\n" +
+            "```\n" +
+            "#copy initial data to data/ics/uploads\n" +
+            "cd app\n" +
+            "python ics_data_clean.py\n" +
+            "```\n" +
+            "This will produce the dataframe `data_final.pkl` in pickle directory.\n" +
+            "\n" +
+            "### 3. NLP and ML process\n" +
+            "```\n" +
+            "python ics_train_classifier.py\n" +
+            "```\n" +
+            "It may take a long time, and end with the trained model `model.pkl` and submodels in pickle directory.\n" +
+            "\n" +
+            "### 4. Run the Flask Server\n" +
+            "```\n" +
+            "python run.py\n" +
+            "```\n" +
+            "This will start the web server. \n" +
+            "\n" +
+            "In a new web browser window, type in the following url and press enter:\n" +
+            "```\n" +
+            "http://localhost:3001/\n" +
+            "```\n" +
+            "You will see the department selection page of the webapp. Click the prefered department, type in a sentence in the input bar, and click the `Submit` button, the server will redirect you to the calssification result page.\n" +
+            "\n" +
+            "![img](app\\static\\images\\ics_home.png)\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "## Project Components\n" +
+            "\n" +
+            "This project consists of three components:\n" +
+            "\n" +
+            "### 1. ETL Pipeline\n" +
+            "Implemented in `process_data.py`.\n" +
+            "1. Loads the messages and categories datasets\n" +
+            "2. Merges the two datasets for model training and testing\n" +
+            "3. Cleans the data\n" +
+            "4. Stores the cleaned data in a SQLite database\n" +
+            "\n" +
+            "### 2. NLP and ML Pipeline\n" +
+            "Implemented in `train_classifier.py`.\n" +
+            "1. Loads data from the SQLite database\n" +
+            "2. Splits the dataset into training and test sets\n" +
+            "3. Builds a text processing pipline\n" +
+            "4. Builds a machine learning pipeline incorporates feature extraction and transformation\n" +
+            "5. Trains and tunes a model using GridSearchCV\n" +
+            "6. Outputs results on the test set\n" +
+            "7. Exports the final model as a pickle file\n" +
+            "\n" +
+            "### 3. Flask Web App\n" +
+            "1. The web app that visualizes the statistics of the dataset\n" +
+            "2. Responds to user input and classify the message\n" +
+            "3. Display the classification result\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "## Assumptions\n" +
+            "1. ##### To receive accurate classification, input client provided 'Subject'.\n" +
+            "2. Data is correctly categorized and sub-categorized.\n" +
+            "3. ##### Each category has atleast 150 data rows and each subcategory has atleast 10 data rows.\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "## Possible future bugs and errors\n" +
+            "1. Any category or subcategory have less than minimum data rows.\n" +
+            "2. Column names are wrong in upload training data or spelling mistake in category or subcategory column in training data.\n" +
+            "3. Model was not fully trained and whole project files require fallback.\n" +
+            "4. ##### (For Developer) Implement of asynchronous function for training is must in future.\n" +
+            "5. (For Developer) Number of iterations of KERAS.Sequential().fit() must be changed according to training data size.\n" +
+            "6. (For Developer) Reduce classification time. \n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "## Manual Retrain Process\n" +
+            "```\n" +
+            "# Put all the training data in data/ics/uploads folder in proper format and structure\n" +
+            "# go to 'app' directory\n" +
+            "python ics_data_clean.py\n" +
+            "python ics_train_classifier.py\n" +
+            "```\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "\n" +
+            "## Folder Structure\n" +
+            "```\n" +
+            "SDC\n" +
+            "│   .gitignore\n" +
+            "│   README.md\n" +
+            "│   requirements.txt\n" +
+            "│   setup.py\n" +
+            "│\n" +
+            "├───app\n" +
+            "│   │   ics_data_clean.py   # program that processes data\n" +
+            "│   │   ics_keywords.py\n" +
+            "│   │   ics_main.py\n" +
+            "│   │   ics_save_stop_words.py\n" +
+            "│   │   ics_train_classifier.py  # program that trains the classification model\n" +
+            "│   │   run.py  # Flask file that runs app\n" +
+            "│   │\n" +
+            "│   ├───static\n" +
+            "│   │   ├───css\n" +
+            "│   │   └───images\n" +
+            "│   │\n" +
+            "│   └───templates\n" +
+            "│           go.html  # classification result page of web app\n" +
+            "│           ics_master.html  # ics home\n" +
+            "│           ics_train.html\n" +
+            "│           ics_train_post.html\n" +
+            "│           roa_master.html\n" +
+            "│           SDC.html  # main page of web app\n" +
+            "│\n" +
+            "├───data\n" +
+            "│   ├───ics\n" +
+            "│   │   │\n" +
+            "│   │   └───uploads  # training data files in xlsx format\n" +
+            "│   │\n" +
+            "│   └───roa\n" +
+            "└───pickle\n" +
+            "    ├───ics\n" +
+            "    │   │   data_final.pkl  # final cleaned data\n" +
+            "    │   │   keys.pkl  #keys, phrases and common queries\n" +
+            "    │   │   stop_words.pickle  # data cleaning stop words\n" +
+            "    │   │   training_database_index.pkl  # dataframe to keep training database record\n" +
+            "    │   │\n" +
+            "    │   ├───categ_data  # data from subcategories\n" +
+            "    │   │\n" +
+            "    │   ├───dataframes  #individual dataframes\n" +
+            "    │   │\n" +
+            "    │   ├───factorize\n" +
+            "    │   │\n" +
+            "    │   ├───models\n" +
+            "    │   │       model.pkl  # saved model \n" +
+            "    │   │\n" +
+            "    │   └───submodels  #submodels\n" +
+            "    │\n" +
+            "    └───roa\n" +
+            "\n" +
+            "- README.md\n" +
+            "```\n ");
+</script>
+
+
+</body>
+</html>
