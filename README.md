@@ -37,7 +37,7 @@ http://localhost:3001/
 ```
 You will see the department selection page of the webapp. Click the prefered department, type in a sentence in the input bar, and click the `Submit` button, the server will redirect you to the calssification result page.
 
-![img](app\static\images\ics_home.png)
+![img](https://github.com/gaurav-mundra/sdc/blob/master/app/static/images/ics_home.png)
 
 
 
